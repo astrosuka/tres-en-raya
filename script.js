@@ -15,10 +15,19 @@ const gameboard = (function () {
     const setBoard = (row, col, sym) => {
         arr[row][col] = sym;
     };
+
+    const isFull = () => {
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
+                if (arr[i][j] === 0) return false;
+            }
+        }
+        return true;
+    };
     
     clearBoard();
     const getBoard = () => arr;
-    return { getBoard, setBoard, clearBoard };
+    return { getBoard, setBoard, clearBoard, isFull };
 })();
 
 function createPlayer (name, symbol) {
@@ -35,13 +44,39 @@ function createPlayer (name, symbol) {
 const game = (function (){
     const playerOne = createPlayer('Player 1', 'x');
     const playerTwo = createPlayer('Player 2', (playerOne.getSymbol() === 'x' ? 'o' : 'x'));
-     
-    const playRound = function (player, row, column) {
+    let currentPlayer = playerOne;
+
+    console.log('Ready to play!')
+
+    const play = function (row, column) {
         if (gameboard.getBoard()[row][column] === 0) {
-            gameboard.setBoard(row, column, player.getSymbol())
-        }      
-         
-        isWin() ? console.log('the winner is: ' + isWin()) : console.log('ready for new round!');
+            gameboard.setBoard(row, column, currentPlayer.getSymbol());
+            console.table(gameboard.getBoard());
+            if (isWin()) {
+                if (isWin() === 'x') {
+                    playerOne.increaseScore()
+                    console.log('the winner is: ' + playerOne.playerName)
+                } else {
+                    playerTwo.increaseScore()
+                    console.log('the winner is: ' + playerTwo.playerName)
+                }
+                console.log('p1 score: ' + playerOne.getScore() + ' | p2 score: ' + playerTwo.getScore());
+                // volver a empezar
+                currentPlayer = playerOne;
+                gameboard.clearBoard();
+            } else 
+            if (gameboard.isFull()) {
+                console.log(`It's a Tie!`);
+                console.log('p1 score: ' + playerOne.getScore() + ' | p2 score: ' + playerTwo.getScore());
+                // volver a empezar
+                currentPlayer = playerOne;
+                gameboard.clearBoard();
+            } else {
+                console.log('ready for new round!');
+                // switch currentPlayer
+                currentPlayer === playerOne ? currentPlayer = playerTwo : currentPlayer = playerOne;
+            }
+        }    
     };
 
     function isWin () {
@@ -99,10 +134,32 @@ const game = (function (){
         }
     };
       
-    return { playRound, playerOne, playerTwo };
+    return { play, playerOne, playerTwo };
 })();
 
-// test
-game.playRound(game.playerOne, 0, 2);
-game.playRound(game.playerOne, 0, 1);
-game.playRound(game.playerOne, 0, 0);
+// // test
+// //tie
+// game.play(0, 2);
+// game.play(1, 2);
+// game.play(1, 1);
+// game.play(2, 0);
+// game.play(2, 1);
+// game.play(0, 1);
+// game.play(0, 0);
+// game.play(2, 2);
+// game.play(1, 0);
+
+// // p1 win
+// game.play(0, 0);
+// game.play(1, 2);
+// game.play(0, 1);
+// game.play(2, 0);
+// game.play(0, 2);
+
+// // p2 win
+// game.play(2, 2);
+// game.play(0, 0);
+// game.play(1, 2);
+// game.play(0, 1);
+// game.play(2, 0);
+// game.play(0, 2);
