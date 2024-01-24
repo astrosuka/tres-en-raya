@@ -11,10 +11,14 @@ const gameboard = (function () {
             }
         }
     };
+
+    const setBoard = (row, col, sym) => {
+        arr[row][col] = sym;
+    };
     
     clearBoard();
     const getBoard = () => arr;
-    return { getBoard, clearBoard };
+    return { getBoard, setBoard, clearBoard };
 })();
 
 function createPlayer (name, symbol) {
@@ -25,5 +29,5 @@ function createPlayer (name, symbol) {
     const increaseScore = () => score++;
     const getSymbol = () => symbol;
 
-    return{ playerName, getScore, increaseScore, getSymbol };
+    return { playerName, getScore, increaseScore, getSymbol };
 };
