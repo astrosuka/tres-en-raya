@@ -148,16 +148,14 @@ const display = (function () {
     const update = () => {
         wrapper.textContent = '';
         for (let i = 0; i < gameboard.getBoard().length; i++) {
-            // let rowCell = document.createElement('div');
-            // rowCell.classList.add('row-cell');
-            // wrapper.appendChild(rowCell);
-            // console.log(gameboard.getBoard()[i]);
             for (let j = 0; j < gameboard.getBoard()[i].length; j++) {
-                console.log(gameboard.getBoard()[i][j])
                 let colCell = document.createElement('div');
                 colCell.classList.add('cell');
                 wrapper.appendChild(colCell);
                 colCell.textContent = gameboard.getBoard()[i][j];
+                colCell.addEventListener('click', () => {
+                    game.play(i, j);
+                })
             }
         }
     }
