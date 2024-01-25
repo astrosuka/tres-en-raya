@@ -64,4 +64,6 @@ body {
 
 .score-display {
     align-self: start;
+    display: flex;
+    gap: 16px;
 }

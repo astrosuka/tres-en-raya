@@ -42,8 +42,11 @@ function createPlayer (name, symbol) {
 };
 
 const game = (function (){
-    const playerOne = createPlayer('Player 1', 'x');
-    const playerTwo = createPlayer('Player 2', (playerOne.getSymbol() === 'x' ? 'o' : 'x'));
+    let playerOneName = 'x';
+    let playerTwoName = 'o';
+
+    const playerOne = createPlayer(playerOneName, 'x');
+    const playerTwo = createPlayer(playerTwoName, (playerOne.getSymbol() === 'x' ? 'o' : 'x'));
     let currentPlayer = playerOne;
     let result;
 
@@ -128,8 +131,9 @@ const game = (function (){
     };
 
     const getResult = () => result;
+    const getCurrentPlayer = () => currentPlayer;
 
-    return { play, playerOne, playerTwo, getResult };
+    return { play, playerOne, playerTwo, getResult, getCurrentPlayer };
 })();
 
 const display = (function () {
@@ -151,13 +155,18 @@ const display = (function () {
 
         const scoreDisplay = document.querySelector('.score-display');
         scoreDisplay.textContent = '';
-        const p1Score = document.createElement('p');
-        p1Score.textContent = `${game.playerOne.playerName} score: ${game.playerOne.getScore()}`;
-        scoreDisplay.appendChild(p1Score);
-        const p2Score = document.createElement('p');
-        p2Score.textContent = `${game.playerTwo.playerName} score: ${game.playerTwo.getScore()}`;
-        scoreDisplay.appendChild(p2Score);
+        
+        const currentPlayer = document.createElement('p');
+        currentPlayer.textContent = `turn: ${game.getCurrentPlayer().playerName}`;
+        scoreDisplay.appendChild(currentPlayer); 
 
+        const p1Score = document.createElement('p');
+        p1Score.textContent = `score: ${game.playerOne.playerName} = ${game.playerOne.getScore()}`;
+        scoreDisplay.appendChild(p1Score);
+
+        const p2Score = document.createElement('p');
+        p2Score.textContent = `${game.playerTwo.playerName} = ${game.playerTwo.getScore()}`;
+        scoreDisplay.appendChild(p2Score);
     }
     
     const roundEndDialog = () => {
@@ -189,7 +198,11 @@ const display = (function () {
             document.body.removeChild(dialog);
         });
     }
-    
+
+    // const nameDialog = () => {
+    //     const dialog = 
+    // }
+
     update();
     return { update, roundEndDialog };
 }());
