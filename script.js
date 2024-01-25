@@ -49,11 +49,13 @@ const game = (function (){
     const playerTwo = createPlayer(playerTwoName, (playerOne.getSymbol() === 'x' ? 'o' : 'x'));
     let currentPlayer = playerOne;
     let result;
+    let gameActive = true;
 
     const play = function (row, column) {
-        if (gameboard.getBoard()[row][column] === '') {
+        if (gameboard.getBoard()[row][column] === '' && gameActive) {
             gameboard.setBoard(row, column, currentPlayer.getSymbol());
             if (isWin()) {
+                gameActive = false;
                 if (isWin() === 'x') {
                     playerOne.increaseScore()
                     result = isWin();
@@ -65,6 +67,7 @@ const game = (function (){
                 display.roundEndDialog()
             } else 
             if (gameboard.isFull()) {
+                gameActive = false;
                 result = 'tie';
                 currentPlayer = playerOne;
                 display.roundEndDialog()
@@ -132,8 +135,9 @@ const game = (function (){
 
     const getResult = () => result;
     const getCurrentPlayer = () => currentPlayer;
+    const setGameActive = () => gameActive = true;
 
-    return { play, playerOne, playerTwo, getResult, getCurrentPlayer };
+    return { play, playerOne, playerTwo, getResult, getCurrentPlayer, setGameActive };
 })();
 
 const display = (function () {
@@ -188,13 +192,15 @@ const display = (function () {
         dialog.appendChild(winner);
         
         const restartButton = document.createElement('button');
-        restartButton.textContent = 'restart';
+        restartButton.textContent = 'play again';
         dialog.appendChild(restartButton)
         
         document.body.appendChild(dialog);
         restartButton.addEventListener('click', () => {
             gameboard.clearBoard();
             update();
+            game.setGameActive();
+            
             document.body.removeChild(dialog);
         });
     }
