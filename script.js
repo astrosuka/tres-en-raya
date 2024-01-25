@@ -7,7 +7,7 @@ const gameboard = (function () {
         for (let i = 0; i < rows; i++) {
             arr[i] = [];
             for (let j = 0; j < columns; j++) {
-                arr[i][j] = 0;
+                arr[i][j] = '';
             }
         }
     };
@@ -19,7 +19,7 @@ const gameboard = (function () {
     const isFull = () => {
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < columns; j++) {
-                if (arr[i][j] === 0) return false;
+                if (arr[i][j] === '') return false;
             }
         }
         return true;
@@ -49,7 +49,7 @@ const game = (function (){
     console.log('Ready to play!')
 
     const play = function (row, column) {
-        if (gameboard.getBoard()[row][column] === 0) {
+        if (gameboard.getBoard()[row][column] === '') {
             gameboard.setBoard(row, column, currentPlayer.getSymbol());
             console.table(gameboard.getBoard());
             if (isWin()) {
@@ -63,6 +63,7 @@ const game = (function (){
                 console.log('p1 score: ' + playerOne.getScore() + ' | p2 score: ' + playerTwo.getScore());
                 // volver a empezar
                 currentPlayer = playerOne;
+                // Make it wait for an interaction before running clearBoard
                 gameboard.clearBoard();
             } else 
             if (gameboard.isFull()) {
@@ -70,13 +71,17 @@ const game = (function (){
                 console.log('p1 score: ' + playerOne.getScore() + ' | p2 score: ' + playerTwo.getScore());
                 // volver a empezar
                 currentPlayer = playerOne;
+                // Make it wait for an interaction before running clearBoard
                 gameboard.clearBoard();
             } else {
                 console.log('ready for new round!');
                 // switch currentPlayer
                 currentPlayer === playerOne ? currentPlayer = playerTwo : currentPlayer = playerOne;
             }
-        }    
+        } 
+        
+        display.update();
+
     };
 
     function isWin () {
@@ -136,6 +141,31 @@ const game = (function (){
       
     return { play, playerOne, playerTwo };
 })();
+
+const display = (function () {
+    const wrapper = document.querySelector('.wrapper');
+
+    const update = () => {
+        wrapper.textContent = '';
+        for (let i = 0; i < gameboard.getBoard().length; i++) {
+            // let rowCell = document.createElement('div');
+            // rowCell.classList.add('row-cell');
+            // wrapper.appendChild(rowCell);
+            // console.log(gameboard.getBoard()[i]);
+            for (let j = 0; j < gameboard.getBoard()[i].length; j++) {
+                console.log(gameboard.getBoard()[i][j])
+                let colCell = document.createElement('div');
+                colCell.classList.add('cell');
+                wrapper.appendChild(colCell);
+                colCell.textContent = gameboard.getBoard()[i][j];
+            }
+        }
+    }
+
+    update();
+
+    return { update };
+}());
 
 // // test
 // //tie
