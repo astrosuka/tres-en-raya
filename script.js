@@ -88,16 +88,15 @@ const game = (function (){
         let column = [];
         let diagonal = [];
         let diagonalB = [];
-        let winner;
         const board = gameboard.getBoard();
         
         // check rows
         for (let row = 0; row < 3; row++){
             if (board[row].every((cell) => cell === 'x')){
-                return winner = 'x';
+                return 'x';
             };
             if (board[row].every((cell) => cell === 'o')){
-                return winner = 'o';
+                return 'o';
             }
         }; 
 
@@ -107,10 +106,10 @@ const game = (function (){
                 column.push(board[row][col]); 
             } 
             if (column.every((cell) => cell === 'x')){
-                return winner = 'x';
+                return 'x';
             }
             if (column.every((cell) => cell === 'o')){
-                return winner = 'o';
+                return 'o';
             }
             column = [];    
         };
@@ -120,10 +119,10 @@ const game = (function (){
             diagonal.push(board[i][i]); 
         };
         if (diagonal.every((cell) => cell === 'x')){
-            return winner = 'x';
+            return 'x';
         }
         if (diagonal.every((cell) => cell === 'o')){
-            return winner = 'o';
+            return 'o';
         }
         
         let n = 2; // reverse column order for the second diagonal
@@ -132,13 +131,13 @@ const game = (function (){
                 n--;
         };
         if (diagonalB.every((cell) => cell === 'x')){
-            return winner = 'x';
+            return 'x';
         }
         if (diagonalB.every((cell) => cell === 'o')){
-            return winner = 'o';
+            return 'o';
         }
-    };
-      
+    };   
+
     return { play, playerOne, playerTwo };
 })();
 
