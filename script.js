@@ -45,43 +45,34 @@ const game = (function (){
     const playerOne = createPlayer('Player 1', 'x');
     const playerTwo = createPlayer('Player 2', (playerOne.getSymbol() === 'x' ? 'o' : 'x'));
     let currentPlayer = playerOne;
-
-    console.log('Ready to play!')
+    let result;
 
     const play = function (row, column) {
         if (gameboard.getBoard()[row][column] === '') {
             gameboard.setBoard(row, column, currentPlayer.getSymbol());
-            console.table(gameboard.getBoard());
             if (isWin()) {
                 if (isWin() === 'x') {
                     playerOne.increaseScore()
-                    console.log('the winner is: ' + playerOne.playerName)
+                    result = `${playerOne.playerName} wins`
                 } else {
                     playerTwo.increaseScore()
-                    console.log('the winner is: ' + playerTwo.playerName)
+                    result = `${playerTwo.playerName} wins`
                 }
-                console.log('p1 score: ' + playerOne.getScore() + ' | p2 score: ' + playerTwo.getScore());
-                // volver a empezar
+                // console.log('p1 score: ' + playerOne.getScore() + ' | p2 score: ' + playerTwo.getScore());
                 currentPlayer = playerOne;
-                // Make it wait for an interaction before running clearBoard
-                gameboard.clearBoard();
+                display.roundEndDialog()
             } else 
             if (gameboard.isFull()) {
-                console.log(`It's a Tie!`);
-                console.log('p1 score: ' + playerOne.getScore() + ' | p2 score: ' + playerTwo.getScore());
-                // volver a empezar
+                result = `It's a Tie!`;
                 currentPlayer = playerOne;
-                // Make it wait for an interaction before running clearBoard
-                gameboard.clearBoard();
+                display.roundEndDialog()
+
             } else {
-                console.log('ready for new round!');
-                // switch currentPlayer
                 currentPlayer === playerOne ? currentPlayer = playerTwo : currentPlayer = playerOne;
             }
         } 
         
         display.update();
-
     };
 
     function isWin () {
@@ -136,9 +127,11 @@ const game = (function (){
         if (diagonalB.every((cell) => cell === 'o')){
             return 'o';
         }
-    };   
+    };
 
-    return { play, playerOne, playerTwo };
+    const getResult = () => result;
+
+    return { play, playerOne, playerTwo, getResult };
 })();
 
 const display = (function () {
@@ -158,10 +151,33 @@ const display = (function () {
             }
         }
     }
+    
+    const roundEndDialog = () => {
+        const dialog = document.createElement('div');
+        dialog.classList.add('round-end-dialog'); 
+
+        let winner = document.createElement('p');
+        winner.textContent = game.getResult();
+        dialog.appendChild(winner);
+
+        let score = document.createElement('p');
+        score.textContent = `${game.playerOne.playerName} score: ${game.playerOne.getScore()} --- ${game.playerTwo.playerName} score: ${game.playerTwo.getScore()} `;
+        dialog.appendChild(score);
+
+        const restartButton = document.createElement('button');
+        restartButton.textContent = 'restart';
+        dialog.appendChild(restartButton)
+
+        document.body.appendChild(dialog);
+        restartButton.addEventListener('click', () => {
+            gameboard.clearBoard();
+            update();
+            document.body.removeChild(dialog);
+        });
+    }
 
     update();
-
-    return { update };
+    return { update, roundEndDialog };
 }());
 
 // // test
