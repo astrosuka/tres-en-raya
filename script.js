@@ -53,25 +53,23 @@ const game = (function (){
             if (isWin()) {
                 if (isWin() === 'x') {
                     playerOne.increaseScore()
-                    result = `${playerOne.playerName} wins`
+                    result = isWin();
                 } else {
                     playerTwo.increaseScore()
-                    result = `${playerTwo.playerName} wins`
+                    result = isWin();
                 }
-                // console.log('p1 score: ' + playerOne.getScore() + ' | p2 score: ' + playerTwo.getScore());
                 currentPlayer = playerOne;
                 display.roundEndDialog()
             } else 
             if (gameboard.isFull()) {
-                result = `It's a Tie!`;
+                result = 'tie';
                 currentPlayer = playerOne;
                 display.roundEndDialog()
-
             } else {
                 currentPlayer === playerOne ? currentPlayer = playerTwo : currentPlayer = playerOne;
             }
-        } 
-        
+        }  
+
         display.update();
     };
 
@@ -150,24 +148,40 @@ const display = (function () {
                 })
             }
         }
+
+        const scoreDisplay = document.querySelector('.score-display');
+        scoreDisplay.textContent = '';
+        const p1Score = document.createElement('p');
+        p1Score.textContent = `${game.playerOne.playerName} score: ${game.playerOne.getScore()}`;
+        scoreDisplay.appendChild(p1Score);
+        const p2Score = document.createElement('p');
+        p2Score.textContent = `${game.playerTwo.playerName} score: ${game.playerTwo.getScore()}`;
+        scoreDisplay.appendChild(p2Score);
+
     }
     
     const roundEndDialog = () => {
         const dialog = document.createElement('div');
         dialog.classList.add('round-end-dialog'); 
 
-        let winner = document.createElement('p');
-        winner.textContent = game.getResult();
+        let winner = document.createElement('p');  
+        switch (game.getResult()) {
+            case 'x':
+                winner.textContent = `${game.playerOne.playerName} wins!`;
+                break;
+            case 'o':
+                winner.textContent = `${game.playerTwo.playerName} wins!`;
+                break;
+            case 'tie':
+                winner.textContent = `It's a tie!`;
+                break;
+        }
         dialog.appendChild(winner);
-
-        let score = document.createElement('p');
-        score.textContent = `${game.playerOne.playerName} score: ${game.playerOne.getScore()} --- ${game.playerTwo.playerName} score: ${game.playerTwo.getScore()} `;
-        dialog.appendChild(score);
-
+        
         const restartButton = document.createElement('button');
         restartButton.textContent = 'restart';
         dialog.appendChild(restartButton)
-
+        
         document.body.appendChild(dialog);
         restartButton.addEventListener('click', () => {
             gameboard.clearBoard();
@@ -175,34 +189,7 @@ const display = (function () {
             document.body.removeChild(dialog);
         });
     }
-
+    
     update();
     return { update, roundEndDialog };
 }());
-
-// // test
-// //tie
-// game.play(0, 2);
-// game.play(1, 2);
-// game.play(1, 1);
-// game.play(2, 0);
-// game.play(2, 1);
-// game.play(0, 1);
-// game.play(0, 0);
-// game.play(2, 2);
-// game.play(1, 0);
-
-// // p1 win
-// game.play(0, 0);
-// game.play(1, 2);
-// game.play(0, 1);
-// game.play(2, 0);
-// game.play(0, 2);
-
-// // p2 win
-// game.play(2, 2);
-// game.play(0, 0);
-// game.play(1, 2);
-// game.play(0, 1);
-// game.play(2, 0);
-// game.play(0, 2);
