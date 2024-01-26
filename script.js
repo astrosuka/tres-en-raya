@@ -42,12 +42,16 @@ function createPlayer (name, symbol) {
 };
 
 const game = (function (){
-    let playerOneName = 'x';
-    let playerTwoName = 'o';
+    let playerOne = createPlayer('', 'x');
+    let playerTwo = createPlayer('', 'o');
+    let currentPlayer;
+    
+    const setNames = (p1, p2) => {
+        playerOne.playerName = p1;
+        playerTwo.playerName = p2;
+        currentPlayer = playerOne;
+    }
 
-    const playerOne = createPlayer(playerOneName, 'x');
-    const playerTwo = createPlayer(playerTwoName, (playerOne.getSymbol() === 'x' ? 'o' : 'x'));
-    let currentPlayer = playerOne;
     let result;
     let gameActive = true;
 
@@ -135,9 +139,9 @@ const game = (function (){
 
     const getResult = () => result;
     const getCurrentPlayer = () => currentPlayer;
-    const setGameActive = () => gameActive = true;
+    const activateGame = () => gameActive = true;
 
-    return { play, playerOne, playerTwo, getResult, getCurrentPlayer, setGameActive };
+    return { play, playerOne, playerTwo, getResult, getCurrentPlayer, activateGame, setNames };
 })();
 
 const display = (function () {
@@ -175,7 +179,7 @@ const display = (function () {
     
     const roundEndDialog = () => {
         const dialog = document.createElement('div');
-        dialog.classList.add('round-end-dialog'); 
+        dialog.classList.add('dialog'); 
 
         let winner = document.createElement('p');  
         switch (game.getResult()) {
@@ -199,16 +203,35 @@ const display = (function () {
         restartButton.addEventListener('click', () => {
             gameboard.clearBoard();
             update();
-            game.setGameActive();
+            game.activateGame();
             
             document.body.removeChild(dialog);
         });
     }
 
     // const nameDialog = () => {
-    //     const dialog = 
+    //     const dialog = document.createElement('div');
+    //     dialog.classList.add('dialog'); 
+    //     const p1label
+    //     // const input
+    //     document.body.appendChild(dialog);
     // }
 
-    update();
-    return { update, roundEndDialog };
+    const initialDialog = document.querySelector('.dialog');
+    const xNameInput = document.querySelector('#x-name');
+    const oNameInput = document.querySelector('#o-name');
+    // let xName;
+    // let oName;
+
+    const startButton = document.querySelector('.start-button');
+    startButton.addEventListener('click', () => {
+        game.setNames(xNameInput.value, oNameInput.value);
+        document.body.removeChild(initialDialog);
+        update();    
+    });
+
+    const getXNameInput = () => xName;
+    const getONameInput = () => oName;
+
+    return { update, roundEndDialog, getXNameInput, getONameInput };
 }());
