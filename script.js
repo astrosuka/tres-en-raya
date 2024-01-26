@@ -47,8 +47,8 @@ const game = (function (){
     let currentPlayer;
     
     const setNames = (p1, p2) => {
-        playerOne.playerName = p1;
-        playerTwo.playerName = p2;
+        p1 ? playerOne.playerName = p1 : playerOne.playerName = 'x';
+        p2 ? playerTwo.playerName = p2 : playerTwo.playerName = 'o';
         currentPlayer = playerOne;
     }
 
@@ -209,19 +209,9 @@ const display = (function () {
         });
     }
 
-    // const nameDialog = () => {
-    //     const dialog = document.createElement('div');
-    //     dialog.classList.add('dialog'); 
-    //     const p1label
-    //     // const input
-    //     document.body.appendChild(dialog);
-    // }
-
     const initialDialog = document.querySelector('.dialog');
     const xNameInput = document.querySelector('#x-name');
     const oNameInput = document.querySelector('#o-name');
-    // let xName;
-    // let oName;
 
     const startButton = document.querySelector('.start-button');
     startButton.addEventListener('click', () => {
