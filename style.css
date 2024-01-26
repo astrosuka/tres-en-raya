@@ -48,22 +48,22 @@ body {
     gap: 12px;
     justify-content: center;
     align-items: center;
-    font-size: 24px;
 }
 
 .dialog p {
+    font-size: 28px;
     background-color: white;
-    padding: 2px;
+    padding: 6px;
     border: 1px solid black;
 }
 
 .dialog button {
-    padding: 16px;
+    padding: 6px;
     font-size: 18px;
 }
 
 .dialog label {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .dialog input {
